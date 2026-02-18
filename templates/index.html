@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Universal URL Downloader</title>
+  <meta charset="UTF-8">
+  <style>
+    body { 
+      font-family: Arial; 
+      text-align:center; 
+      margin-top:50px; 
+      background:#111;
+      color:white;
+    }
+    input { 
+      width:60%; 
+      padding:12px; 
+      border-radius:6px;
+      border:none;
+      outline:none;
+    }
+    button { 
+      padding:12px 25px; 
+      margin-top:10px; 
+      border:none;
+      background:#00c3ff;
+      color:black;
+      font-weight:bold;
+      border-radius:6px;
+      cursor:pointer;
+    }
+    video { 
+      margin-top:20px; 
+      width:70%; 
+      border-radius:10px;
+    }
+    a {
+      display:block;
+      margin-top:15px;
+      color:#00ffcc;
+      font-weight:bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Universal URL Downloader (Docker Proxy Version)</h2>
+
+<input type="text" id="urlInput" placeholder="Enter any public URL (mp4/m3u8/mpd/etc)">
+<br>
+<button onclick="processUrl()">Load</button>
+
+<div id="result"></div>
+
+<script>
+function processUrl() {
+  const url = document.getElementById("urlInput").value.trim();
+  const proxyUrl = "/fetch?url=" + encodeURIComponent(url);
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = "";
+
+  if (!url) {
+    resultDiv.innerHTML = "<p>Please enter a valid URL.</p>";
+    return;
+  }
+
+  if (url.toLowerCase().endsWith(".mp4")) {
+    resultDiv.innerHTML = `
+      <video controls>
+        <source src="${proxyUrl}" type="video/mp4">
+      </video>
+      <a href="${proxyUrl}" download>Download MP4</a>
+    `;
+  } 
+  else if (url.toLowerCase().endsWith(".m3u8") || url.toLowerCase().endsWith(".mpd")) {
+    resultDiv.innerHTML = `
+      <video controls src="${proxyUrl}"></video>
+    `;
+  } 
+  else {
+    resultDiv.innerHTML = `
+      <a href="${proxyUrl}" download>Download File</a>
+    `;
+  }
+}
+</script>
+
+</body>
+</html>
